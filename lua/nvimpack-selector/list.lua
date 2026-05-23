@@ -14,6 +14,7 @@ local ColumnHelper = {
   end
 }
 
+---Pad a string to fit the display settings.
 ---@param value string
 ---@param display column_display_settings
 ---@return string

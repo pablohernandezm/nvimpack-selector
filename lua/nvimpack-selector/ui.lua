@@ -3,7 +3,7 @@ local M = {}
 ---@alias Footer string[]
 
 
----Create a centered floating window
+---Create a centered floating window.
 ---@param buffer nil | integer
 ---@param opts UIOptions
 ---@return integer buffer

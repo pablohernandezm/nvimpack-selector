@@ -2,9 +2,18 @@
 local defaults = {
   ---@class UIOptions
   ui = {
+    ---Minimum window width.
     min_width = 50,
+    ---Minimum window height.
     min_height = 20,
+    ---Window title.
     title = "Pack selector",
+
+    ---Footer is an array of entries shown on the floating window footer.
+    ---By default it shows the window keymaps.
+    ---Each entry may be:
+    --- - a plain string, e.g. { " " }
+    --- - an array: { "text", "HighlightGroup" }
     footer = {
       { "[u] update", "DiagnosticFloatingInfo" },
       { " " },
@@ -13,25 +22,37 @@ local defaults = {
       { "[d] delete", "DiagnosticFloatingWarn" },
     },
 
-    --- Calculated the first time the window is open based ui.min_width and columns.width.
+    ---Calculated the first time the window is open based ui.min_width and columns.width.
     ---@private
     ---@type integer | nil
     _width = nil,
   },
   ---@class ColumnOptions
   columns = {
-    ---Columns to display and their order.
+    ---Which columns to display and in what order
     ---@alias selector_column "name" | "rev" | "src"
     ---@type selector_column[]
     order = { "name", "rev", "src" },
 
-    ---@alias column_display_settings integer | {[1]:integer; [2]:"ellipsis"|"cut"}
-    --- Display options for each column based on the order they are displayed.
-    --- Negative value make the column fills the available space.
-    --- Non specified values are set to -1 automatically.
-    --- If you want to hide a column that is in order, give it a width of 0.
-    --- Optionally you can set a display value with an array with two values: an integer and an overflow setting.
-    --- Note that this values may affect the size of the windows if the sum is bigger than the provided in the ui options.
+    ---@alias column_display_settings
+    ---| integer The column fixed width.
+    ---| {[1]:integer; [2]:"ellipsis"|"cut"} The column fixed width and the overflow handling mode.
+
+    ---Display options for each column based on the order they are displayed.
+    ---Negative value make the column fills the available space.
+    ---Non specified values are set to -1 automatically.
+    ---If you want to hide a column that is in order, give it a width of 0.
+    ---Optionally you can set a display value with an array with two values: an integer and an overflow setting.
+    ---Note that this values may affect the size of the windows if the sum is bigger than the provided in the ui options.
+
+    ---How to display each column (corresponds to `order`).
+    ---Each entry can be:
+    --- - an integer: fixed width, e.g. 20
+    --- - a negative integer (e.g. -1): fill remaining space
+    --- - 0: hide the column
+    --- - an array: { width, "ellipsis" | "cut" } where the second element controls overflow display
+    ---
+    ---Please note that this values may affect window size if the sum is greater than the provided in the ui options.
     --- @type column_display_settings[]
     display = { 20, { 7, "cut" }, -1 },
   }
@@ -51,6 +72,9 @@ M.setup = function(opts)
   M.settings = vim.tbl_deep_extend("force", M.settings, opts)
 end
 
+---Open the selector.
+---@return integer window The window id
+---@return integer buffer The buffer id
 M.open = function()
   --Calculate the window width
   if not M.settings.ui._width then
@@ -85,8 +109,9 @@ M.open = function()
   return win_data.win, win_data.buf
 end
 
----@return nil | integer
----@return nil | integer
+---Toggle the selector.
+---@return nil | integer window The window id
+---@return nil | integer buffer The buffer id
 M.toggle = function()
   if vim.api.nvim_win_is_valid(win_data.win) then
     vim.api.nvim_win_close(win_data.win, false)
