@@ -36,7 +36,7 @@ local defaults = {
 
     ---@alias column_display_settings
     ---| integer The column fixed width.
-    ---| {[1]:integer; [2]:"ellipsis"|"cut"} The column fixed width and the overflow handling mode.
+    ---| {[1]:integer, [2]:"ellipsis"|"cut"} The column fixed width and the overflow handling mode.
 
     ---Display options for each column based on the order they are displayed.
     ---Negative value make the column fills the available space.
