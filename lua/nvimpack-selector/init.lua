@@ -23,7 +23,6 @@ local defaults = {
     },
 
     ---Calculated the first time the window is open based ui.min_width and columns.width.
-    ---@private
     ---@type integer | nil
     _width = nil,
   },
@@ -82,7 +81,14 @@ M.open = function()
       local sum = 0
 
       for _, d in pairs(M.settings.columns.display) do
-        sum = sum + (type(d) == "number" and d or d[1])
+        local cw = 0
+        if type(d) == "number" then
+          cw = d
+        elseif type(d[1]) == "number" then
+          cw = d[1]
+        end
+
+        sum = sum + cw
       end
 
       return sum

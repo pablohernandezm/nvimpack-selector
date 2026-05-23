@@ -19,12 +19,24 @@ local ColumnHelper = {
 ---@param display column_display_settings
 ---@return string
 local function pad_string(value, display)
-  -- Determine target width and overflow strategy
-  local max_w = type(display) == "number" and display or display[1]
+  -- Initial string max width to 0
+  local max_w = 0
+
+  -- Extract the max width
+  if type(display) == "number" then
+    max_w = display
+  elseif type(display) == "table" and type(display[1]) == "number" then
+    max_w = display[1]
+  end
+
+  -- Nothing to process
+  if max_w <= 0 then return "" end
+
+  -- Default overflow values
   local overflow = "ellipsis"
   local overflow_text = "..."
 
-  if type(display) == "table" and display[2] then
+  if type(display) == "table" then
     overflow = display[2]
   end
 
@@ -62,61 +74,62 @@ end
 M.lines = function(data, max_width, line_formatter)
   local pack = require("nvimpack-selector.pack")
 
-  --Per column width
+  ---Per column width
+  ---@type integer[]
   local pc_width = {}
 
   local free_space = max_width
   local n_unset_space = 0
 
   for i = 1, #data.display do
-    local unset = false
-
     if free_space <= 0 then
       pc_width[i] = 0
       break
-    elseif data.display[i] then
-      local d = data.display[i]
-      local cw = type(d) == "number" and d or d[1]
-
-      if cw < 0 then
-        unset = true
-      elseif cw < free_space then
-        free_space = free_space - cw
-        pc_width[i] = cw
-      elseif cw >= free_space then
-        pc_width[i] = cw - (cw - free_space)
-        free_space = 0
-        break
-      end
-    else
-      unset = true
     end
 
-    if unset then
+    local d = data.display[i]
+    local cw = 0
+    if type(d) == "number" then
+      cw = d
+    elseif type(d[1]) == "number" then
+      cw = d[1]
+    end
+
+    if cw < 0 then
       pc_width[i] = -1
       n_unset_space = n_unset_space + 1
+    elseif cw < free_space then
+      free_space = free_space - cw
+      pc_width[i] = cw
+    elseif cw >= free_space then
+      pc_width[i] = cw - (cw - free_space)
+      free_space = 0
+      break
     end
   end
 
   ---Formatted lines
   ---@type string[][]
-  local pack_data = vim.iter(pack.get()):map(function(p)
+  local pack_data = {}
+
+  for _, p in ipairs(pack.get()) do
     ---@type string[]
     local line = {}
 
     for i, v in ipairs(data.order) do
-      if data.display[i] and ColumnHelper[v] then
+      if data.display[i] and ColumnHelper[v] and pc_width[i] then
         local value = ColumnHelper[v](p)
-        local d = data.display[i]
         local cw = pc_width[i]
 
         if free_space > 0 and cw < 0 then
           cw = n_unset_space > 0 and math.floor(free_space / n_unset_space) or 0
         end
 
-        if type(d) == "number" then
+        ---@type column_display_settings
+        local d = data.display[i]
+        if type(d) ~= "table" then
           d = cw
-        else
+        elseif type(d[1]) == "number" then
           d[1] = cw
         end
 
@@ -125,8 +138,8 @@ M.lines = function(data, max_width, line_formatter)
     end
 
 
-    return line
-  end):totable()
+    table.insert(pack_data, line)
+  end
 
   ---@type string[]
   local result = {}
