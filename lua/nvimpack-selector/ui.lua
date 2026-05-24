@@ -2,7 +2,6 @@ local M = {}
 
 ---@alias Footer string[]
 
-
 ---Create a centered floating window.
 ---@param buffer nil | integer
 ---@param opts UIOptions

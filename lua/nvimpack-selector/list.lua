@@ -11,7 +11,7 @@ local ColumnHelper = {
   end,
   src = function(pack)
     return pack.spec.src
-  end
+  end,
 }
 
 ---Pad a string to fit the display settings.
@@ -30,7 +30,9 @@ local function pad_string(value, display)
   end
 
   -- Nothing to process
-  if max_w <= 0 then return "" end
+  if max_w <= 0 then
+    return ""
+  end
 
   -- Default overflow values
   local overflow = "ellipsis"
@@ -136,7 +138,6 @@ M.lines = function(data, max_width, line_formatter)
         table.insert(line, pad_string(value, d))
       end
     end
-
 
     table.insert(pack_data, line)
   end

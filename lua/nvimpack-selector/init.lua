@@ -17,7 +17,7 @@ local defaults = {
     footer = {
       { "[u] update", "DiagnosticFloatingInfo" },
       { " " },
-      { "[c] clear",  "DiagnosticFloatingHint" },
+      { "[c] clear", "DiagnosticFloatingHint" },
       { " " },
       { "[d] delete", "DiagnosticFloatingWarn" },
     },
@@ -54,16 +54,16 @@ local defaults = {
     ---Please note that this values may affect window size if the sum is greater than the provided in the ui options.
     --- @type column_display_settings[]
     display = { 20, { 7, "cut" }, -1 },
-  }
+  },
 }
 
 local M = {
-  settings = defaults
+  settings = defaults,
 }
 
 local win_data = {
   buf = -1,
-  win = -1
+  win = -1,
 }
 
 ---@param opts Settings
@@ -77,27 +77,29 @@ end
 M.open = function()
   --Calculate the window width
   if not M.settings.ui._width then
-    M.settings.ui._width = math.max(M.settings.ui.min_width, (function()
-      local sum = 0
+    M.settings.ui._width = math.max(
+      M.settings.ui.min_width,
+      (function()
+        local sum = 0
 
-      for _, d in pairs(M.settings.columns.display) do
-        local cw = 0
-        if type(d) == "number" then
-          cw = d
-        elseif type(d[1]) == "number" then
-          cw = d[1]
+        for _, d in pairs(M.settings.columns.display) do
+          local cw = 0
+          if type(d) == "number" then
+            cw = d
+          elseif type(d[1]) == "number" then
+            cw = d[1]
+          end
+
+          sum = sum + cw
         end
 
-        sum = sum + cw
-      end
-
-      return sum
-    end)())
+        return sum
+      end)()
+    )
   end
 
   --Open the floating window
   win_data.buf, win_data.win = require("nvimpack-selector.ui").open_float(nil, M.settings.ui)
-
 
   --Display the selector
   require("nvimpack-selector.list").display(M.settings.columns, win_data.buf, M.settings.ui._width)
@@ -109,7 +111,7 @@ M.open = function()
     callback = function()
       win_data.win = -1
       win_data.buf = -1
-    end
+    end,
   })
 
   return win_data.win, win_data.buf
