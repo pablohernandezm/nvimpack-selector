@@ -11,10 +11,6 @@ license = "MIT"
 [dependencies]
 # Add your dependencies here
 
-[run]
-command = "nvim"
-args = [ "-l", "src/main.lua" ]
-
 [test]
 type = "busted"
 
