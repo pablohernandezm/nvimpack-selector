@@ -5,7 +5,7 @@ lua = ">=5.1"
 [description]
 summary = "A simple ui for vim.pack"
 maintainer = "pablohernandezm"
-labels = [  ]
+labels = [ "neovim" ]
 license = "MIT"
 
 [dependencies]
