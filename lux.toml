@@ -1,0 +1,22 @@
+package = "nvimpack-selector"
+version = "0.1.0"
+lua = ">=5.1"
+
+[description]
+summary = "A simple ui for vim.pack"
+maintainer = "pablohernandezm"
+labels = [  ]
+license = "MIT"
+
+[dependencies]
+# Add your dependencies here
+
+[run]
+command = "nvim"
+args = [ "-l", "src/main.lua" ]
+
+[test]
+type = "busted"
+
+[build]
+type = "builtin"
