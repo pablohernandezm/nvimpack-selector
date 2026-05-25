@@ -11,10 +11,6 @@ license = "MIT"
 [dependencies]
 # Add your dependencies here
 
-[test_dependencies]
-busted = "~>2.0.0"
-nlua = "~>0.3"
-
 [test]
 type = "busted"
 
