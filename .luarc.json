@@ -8,6 +8,8 @@
   "runtime.version": "LuaJIT",
   "workspace.checkThirdParty": false,
   "workspace": {
+    "userThirdParty": [".luals/addons"],
+
     "library": [
       "/usr/share/nvim/runtime",
       ".luals/addons/busted/library",
