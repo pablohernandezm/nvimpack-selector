@@ -2,9 +2,9 @@ local M = {}
 
 ---@alias Footer string[]
 
----Create a centered floating window.
+--- Create a centered floating window.
 ---@param buffer nil | integer
----@param opts UIOptions
+---@param opts   UIOptions
 ---@return integer buffer
 ---@return integer window
 M.open_float = function(buffer, opts)

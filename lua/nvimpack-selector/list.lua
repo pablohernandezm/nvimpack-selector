@@ -1,6 +1,6 @@
 local M = {}
 
----Extracts the value of the supported columna.
+--- Extracts the value of the supported columna.
 ---@type table<selector_column, fun(pack: vim.pack.PlugData): string>
 local ColumnHelper = {
   name = function(pack)
@@ -14,8 +14,8 @@ local ColumnHelper = {
   end,
 }
 
----Pad a string to fit the display settings.
----@param value string
+--- Pad a string to fit the display settings.
+---@param value   string
 ---@param display column_display_settings
 ---@return string
 local function pad_string(value, display)
@@ -69,14 +69,14 @@ local function pad_string(value, display)
   return value .. string.rep(" ", max_w - val_len)
 end
 
----Get the formatted lines with information about the required columns.
----@param data ColumnOptions Line data array.
----@param max_width integer This should be the sum of all the expected columns width.
----@param line_formatter? fun(data: string[]):string Custom line formatter. Gets each column to return a string.
+--- Get the formatted lines with information about the required columns.
+---@param data            ColumnOptions               Line data array.
+---@param max_width       integer                     This should be the sum of all the expected columns width.
+---@param line_formatter? fun(data: string[]): string Custom line formatter. Gets each column to return a string.
 M.lines = function(data, max_width, line_formatter)
   local pack = require("nvimpack-selector.pack")
 
-  ---Per column width
+  --- Per column width
   ---@type integer[]
   local pc_width = {}
 
@@ -110,7 +110,7 @@ M.lines = function(data, max_width, line_formatter)
     end
   end
 
-  ---Formatted lines
+  --- Formatted lines
   ---@type string[][]
   local pack_data = {}
 
@@ -160,9 +160,9 @@ M.lines = function(data, max_width, line_formatter)
   return result
 end
 
----Display the plugin list in `buff`.
----@param data ColumnOptions
----@param buff integer
+--- Display the plugin list in `buff`.
+---@param data  ColumnOptions
+---@param buff  integer
 ---@param width integer
 M.display = function(data, buff, width)
   local lines = M.lines(data, width)
