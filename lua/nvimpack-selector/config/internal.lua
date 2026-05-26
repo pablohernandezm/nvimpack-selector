@@ -33,6 +33,7 @@
 ---@field columns nvimpack-selector.Config.Columns
 ---@field window nvimpack-selector.Config.Window
 local default_config = {
+  ---@enum (key) nvimpack-selector.Config.Column
   columns = {
     name = {
       title = "name",
