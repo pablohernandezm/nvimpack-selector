@@ -1,33 +1,73 @@
+--- == COLUMN CONFIG == ---
+---@class nvimpack-selector.Config.Columns.Opts
+---@field title string
+---@field width integer
+---@field overflow "ellipsis" | "cut" | string
+---@field priority integer
+
+---@class nvimpack-selector.Config.Columns
+---@field name nvimpack-selector.Config.Columns.Opts
+---@field rev  nvimpack-selector.Config.Columns.Opts
+---@field src  nvimpack-selector.Config.Columns.Opts
+
+--- == WINDOW  CONFIG == ---
 ---@alias nvimpack-selector.Config.Window.Position ("left" | "center" | "right")
+
+---@class nvimpack-selector.Config.Window.Title
+---@field text string
+---@field position nvimpack-selector.Config.Window.Position
+
+---@class nvimpack-selector.Config.Window.Footer
+---@field entries {[1]: string, [2]: string?}[]
+---@field separator string
+---@field position nvimpack-selector.Config.Window.Position
+
+---@class nvimpack-selector.Config.Window
+---@field min_width  integer
+---@field min_height integer
+---@field title nvimpack-selector.Config.Window.Title
+---@field footer nvimpack-selector.Config.Window.Footer
+
+--- == DEFAULT CONFIGURATION == ---
 ---@class nvimpack-selector.Config
+---@field columns nvimpack-selector.Config.Columns
+---@field window nvimpack-selector.Config.Window
 local default_config = {
-  ---@class nvimpack-selector.Config.Window
+  columns = {
+    name = {
+      title = "name",
+      width = 20,
+      overflow = "ellipsis",
+      priority = 1,
+    },
+    rev = {
+      title = "rev",
+      width = 7,
+      overflow = "cut",
+      priority = 2,
+    },
+    src = {
+      title = "src",
+      width = -1,
+      overflow = "ellipsis",
+      priority = 3,
+    },
+  },
+
   window = {
-    ---Minimum window width.
-    ---@type integer
     min_width = 50,
-    ---Minimum window height.
-    ---@type integer
     min_height = 20,
-    ---Window title.
     title = {
-      ---@type string
       text = "Pack selector",
-      ---@type nvimpack-selector.Config.Window.Position
       position = "left",
     },
     footer = {
-      --- Array of entries to be shown on the floating window footer.
-      --- By default it shows some window keymaps.
-      ---@type ({ [1]: string, [2]: string? })[]
       entries = {
         { "[u] update", "DiagnosticFloatingInfo" },
         { "[c] clear", "DiagnosticFloatingHint" },
         { "[d] delete", "DiagnosticFloatingWarn" },
       },
-      ---@type string
       separator = " ",
-      ---@type nvimpack-selector.Config.Window.Position
       position = "left",
     },
   },
