@@ -1,12 +1,12 @@
 local M = {}
 
 ---Add an element between the elements of a list.
----@param list any[]
----@param element any | fun(item: any, index: integer): any
+---@generic T: any
+---@param list T[]
+---@param element T | fun(index: integer, prev: T, next: T): T
 ---@return any[]
 M.intersperse = function(list, element)
   assert(type(list) == "table", "`list` must be a list")
-
 
   if #list == 0 then
     return {}
@@ -16,7 +16,11 @@ M.intersperse = function(list, element)
 
   for i, v in ipairs(list) do
     if i > 1 then
-      table.insert(new, type(element) == "function" and element(v, i) or element)
+      if type(element) == "function" then
+        table.insert(new, element(i, list[i - 1], v))
+      else
+        table.insert(new, element)
+      end
     end
 
     table.insert(new, v)
@@ -27,10 +31,11 @@ end
 
 --- Surround a list with an element.
 --- Add the element to the start and the end of the list.
---- @param list any[]
---- @param elstart any
---- @param elend any
---- @return any[]
+--- @generic T: any
+--- @param list T[]
+--- @param elstart T
+--- @param elend T
+--- @return T[]
 M.surround = function(list, elstart, elend)
   assert(type(list) == "table", "`list` must be a list")
 
