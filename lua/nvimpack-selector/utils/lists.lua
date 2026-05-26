@@ -2,10 +2,11 @@ local M = {}
 
 ---Add an element between the elements of a list.
 ---@param list any[]
----@param element any
+---@param element any | fun(item: any, index: integer): any
 ---@return any[]
 M.intersperse = function(list, element)
   assert(type(list) == "table", "`list` must be a list")
+
 
   if #list == 0 then
     return {}
@@ -15,7 +16,7 @@ M.intersperse = function(list, element)
 
   for i, v in ipairs(list) do
     if i > 1 then
-      table.insert(new, element)
+      table.insert(new, type(element) == "function" and element(v, i) or element)
     end
 
     table.insert(new, v)

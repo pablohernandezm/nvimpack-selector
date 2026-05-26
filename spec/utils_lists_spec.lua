@@ -9,6 +9,10 @@ describe("utils.lists", function()
 
     it("inserts the element between list items", function()
       assert.are.same({ 1, 0, 2, 0, 3 }, lists.intersperse({ 1, 2, 3 }, 0))
+      assert.are.same({ 1, 0, 2, 0, 3 }, lists.intersperse({ 1, 2, 3 }, function(item, _)
+        return 0
+      end))
+
       assert.are.same({ "a", "-", "b" }, lists.intersperse({ "a", "b" }, "-"))
       assert.are.same({ "a", { "-" }, "b" }, lists.intersperse({ "a", "b" }, { "-" }))
       assert.are.same({ "a", { item = "-" }, "b" }, lists.intersperse({ "a", "b" }, { item = "-" }))
