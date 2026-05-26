@@ -17,16 +17,27 @@ describe("Plugin settings", function()
     plugin.setup(settings)
   end)
 
+  it("Should apply configuration", function()
+    assert.are.Equal(settings.window.title, plugin.getConf().window.title)
+  end)
+
   describe("Open results", function()
-    ---@type nvimpack-selector.Config
-    local results = nil
+    ---@type integer
+    local buffer = nil
+
+    ---@type integer
+    local window = nil
 
     setup(function()
-      results = plugin.open_float()
+      buffer, window = plugin.open_float()
     end)
 
-    it("Should apply configuration", function()
-      assert.are.Equal(settings.window.title, results.window.title)
+    it("Should return a valid buffer", function()
+      assert.is_true(vim.api.nvim_buf_is_valid(buffer))
+    end)
+
+    it("Should return a valid window", function()
+      assert.is_true(vim.api.nvim_win_is_valid(window))
     end)
   end)
 end)
