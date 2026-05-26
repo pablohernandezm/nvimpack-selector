@@ -20,10 +20,10 @@ local default_config = {
     ---@type nvimpack-selector.Window.Footer
     footer = {
       { "[u] update", "DiagnosticFloatingInfo" },
-      { "[c] clear",  "DiagnosticFloatingHint" },
-      { "[d] delete", "DiagnosticFloatingWarn" }
-    }
-  }
+      { "[c] clear", "DiagnosticFloatingHint" },
+      { "[d] delete", "DiagnosticFloatingWarn" },
+    },
+  },
 }
 
 local gs = vim.g.nvimpack_selector or {}

@@ -13,20 +13,29 @@ end
 ---@return integer buffer
 ---@return integer window
 M.open_float = function()
-  ---@as vim.api.keyset.win_config
-  local config = M.getConf()
+  local config = vim.tbl_deep_extend("force", {}, M.getConf())
+
   local w = config.window.min_width
   local h = config.window.min_height
 
-  local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
+  ---@type vim.api.keyset.win_config
+  local float_opts = {
     relative = "editor",
     col = math.floor((vim.o.columns - w) / 2),
     row = math.floor((vim.o.lines - h) / 2),
     width = w,
     height = h,
-    unpack(config)
-  })
+    style = "minimal",
+    border = "rounded",
+    title_pos = "left",
+  }
+
+  -- Remove custom window options
+  config.window.min_width = nil
+  config.window.min_height = nil
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  local win = vim.api.nvim_open_win(buf, true, vim.tbl_deep_extend("keep", float_opts, config.window))
 
   return buf, win
 end

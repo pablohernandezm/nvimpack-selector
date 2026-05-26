@@ -4,7 +4,7 @@ local assert = require("luassert")
 local settings = {
   window = {
     title = "Testing",
-  }
+  },
 }
 
 describe("Plugin settings", function()
