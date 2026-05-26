@@ -3,11 +3,13 @@ local assert = require("luassert")
 ---@type nvimpack-selector.Opts
 local settings = {
   window = {
-    title = "Testing",
+    title = {
+      text = "Testing",
+    },
   },
 }
 
-describe("Plugin settings", function()
+describe("settings", function()
   ---@module "nvimpack-selector"
   local plugin = nil
 
@@ -17,11 +19,11 @@ describe("Plugin settings", function()
     plugin.setup(settings)
   end)
 
-  it("Should apply configuration", function()
-    assert.are.Equal(settings.window.title, plugin.getConf().window.title)
+  it("should apply configuration", function()
+    assert.are.Equal(settings.window.title.text, plugin.getConf().window.title.text)
   end)
 
-  describe("Open results", function()
+  describe("floating window", function()
     ---@type integer
     local buffer = nil
 

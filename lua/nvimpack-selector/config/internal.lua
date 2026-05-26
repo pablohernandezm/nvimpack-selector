@@ -1,3 +1,4 @@
+---@alias nvimpack-selector.Config.Window.Position ("left" | "center" | "right")
 ---@class nvimpack-selector.Config
 local default_config = {
   ---@class nvimpack-selector.Config.Window
@@ -9,19 +10,25 @@ local default_config = {
     ---@type integer
     min_height = 20,
     ---Window title.
-    ---@type string
-    title = "Pack selector",
-    --- Footer is an array of entries shown on the floating window footer.
-    --- By default it shows the window keymaps.
-    --- Each entry may be:
-    --- - a plain string, e.g. { " " }
-    --- - an array: { "text", "HighlightGroup" }
-    ---@alias nvimpack-selector.Window.Footer({ [1]: string, [2]: string? })[]
-    ---@type nvimpack-selector.Window.Footer
+    title = {
+      ---@type string
+      text = "Pack selector",
+      ---@type nvimpack-selector.Config.Window.Position
+      position = "left",
+    },
     footer = {
-      { "[u] update", "DiagnosticFloatingInfo" },
-      { "[c] clear", "DiagnosticFloatingHint" },
-      { "[d] delete", "DiagnosticFloatingWarn" },
+      --- Array of entries to be shown on the floating window footer.
+      --- By default it shows some window keymaps.
+      ---@type ({ [1]: string, [2]: string? })[]
+      entries = {
+        { "[u] update", "DiagnosticFloatingInfo" },
+        { "[c] clear", "DiagnosticFloatingHint" },
+        { "[d] delete", "DiagnosticFloatingWarn" },
+      },
+      ---@type string
+      separator = " ",
+      ---@type nvimpack-selector.Config.Window.Position
+      position = "left",
     },
   },
 }
