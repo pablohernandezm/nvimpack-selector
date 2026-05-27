@@ -36,6 +36,8 @@ M.open_float = function()
     footer_pos = config.window.footer.position,
   })
 
+  require("nvimpack-selector.list").display_list(buf, w)
+
   return buf, win
 end
 

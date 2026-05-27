@@ -39,7 +39,7 @@ local default_config = {
       title = "name",
       width = 20,
       overflow = "ellipsis",
-      priority = 1,
+      priority = 3,
     },
     rev = {
       title = "rev",
@@ -51,7 +51,7 @@ local default_config = {
       title = "src",
       width = -1,
       overflow = "ellipsis",
-      priority = 3,
+      priority = 1,
     },
   },
 
