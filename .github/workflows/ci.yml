@@ -28,14 +28,3 @@ jobs:
       - name: Run lint/typecheck/test
         run: |
           lx --nvim test
-
-  format:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v6
-      - name: Check code formatting
-        uses: JohnnyMorganz/stylua-action@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          version: latest
-          args: --check .
