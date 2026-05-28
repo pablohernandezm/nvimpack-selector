@@ -23,8 +23,13 @@ end
 ---Format a column value based on the width and column options.
 ---@param value string
 ---@param options nvimpack-selector.Config.Columns.Opts
+---@return string
 M.format_column = function(value, options)
   local text = value
+
+  if options.width == 0 then
+    return ""
+  end
 
   if options.value_formatter and type(options.value_formatter) == "function" then
     text = options.value_formatter(value)
@@ -44,24 +49,6 @@ M.format_column = function(value, options)
   end
 
   return string.format("%" .. -options.width .. "s", text)
-end
-
---- Get a column setting by the name of the column
----@param name nvimpack-selector.Config.Column column name
-M.get_column_settings = function(name)
-  assert(type(name) == "string", "`name` should be a string")
-
-  if string.len(name) == 0 then
-    return nil
-  end
-
-  local columns = require("nvimpack-selector.config.internal").columns
-
-  ---@type nvimpack-selector.Config.Columns.Opts
-  local column_options = columns[name]
-  assert(column_options ~= nil, string.format("Could not find settings for column %s", name))
-
-  return column_options
 end
 
 ---Process and order plugin data based on column settings.
