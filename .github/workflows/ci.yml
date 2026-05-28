@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   lint-typecheck-test:
-    name: ${{ matrix.task }} (${{ matrix.nvim-version }})
+    name: test (${{ matrix.nvim-version }})
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
