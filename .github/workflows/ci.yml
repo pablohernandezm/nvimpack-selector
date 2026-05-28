@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-typecheck-test:
+    name: ${{ matrix.task }} (${{ matrix.nvim-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [lint, typecheck, test]
+        nvim-version: [stable, nightly]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Neovim and Lux
+        uses: ./.github/actions/neovim-lux
+        with:
+          nvim-version: ${{ matrix.nvim-version }}
+
+      - name: Run lint/typecheck/test
+        run: |
+          if [[ "${{ matrix.task }}" == "lint" ]]; then
+            lx --nvim lint
+          elif [[ "${{ matrix.task }}" == "typecheck" ]]; then
+            lx --nvim check
+          elif [[ "${{ matrix.task }}" == "test" ]]; then
+            lx --nvim test
+          fi
+
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check code formatting
+        uses: JohnnyMorganz/stylua-action@v5
+        with:
+          version: latest
+          args: --check .
