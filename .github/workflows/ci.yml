@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.nvim-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        nvim-version: [stable, nightly]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Neovim and Lux
+        uses: ./.github/actions/neovim-lux
+        with:
+          nvim-version: ${{ matrix.nvim-version }}
+
+      - name: Run lint/typecheck/test
+        run: |
+          lx --nvim test

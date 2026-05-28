@@ -5,14 +5,14 @@ lua = ">=5.1"
 [description]
 summary = "A simple ui for vim.pack"
 maintainer = "pablohernandezm"
-labels = [ "neovim" ]
+labels = [ "neovim", "plugin", "pack" ]
 license = "MIT"
 
 [dependencies]
 # Add your dependencies here
 
 [test]
-type = "busted"
+type = "busted-nlua"
 
 [build]
 type = "builtin"

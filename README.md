@@ -25,93 +25,73 @@ Available options and defaults:
 
 ```lua
 require('nvimpack-selector').setup({
-  ui = {
-    -- Minimum window width (integer)
-    min_width = 50,
-
-    -- Minimum window height (integer)
-    min_height = 20,
-
-    -- Window title (string)
-    title = "Pack selector",
-
-    -- Footer is an array of entries shown on the floating window footer.
-    -- Each entry may be:
-    --  - a plain string, e.g. { " " }
-    --  - an array: { "text", "HighlightGroup" }
-    footer = {
-      { "[u] update", "DiagnosticFloatingInfo" },
-      { " " },
-      { "[c] clear",  "DiagnosticFloatingHint" },
-      { " " },
-      { "[d] delete", "DiagnosticFloatingWarn" },
+  columns = {
+    -- Per-column options. Each column is keyed by its identifier (name, rev, src).
+    -- Fields:
+    --  - title: string
+    --  - width: integer
+    --      positive: fixed width
+    --      negative: fill remaining space (e.g. -1)
+    --      0: hide the column
+    --  - overflow: "ellipsis" | "cut" -- controls overflow display. You can set a custom string too.
+    --  - priority: integer -- higher priority columns are placed earlier
+    --  - value_formatter: fun(value: string): string -- custom column formatter
+    name = {
+      title = "name",
+      width = 20,
+      overflow = "ellipsis",
+      priority = 3,
+    },
+    rev = {
+      title = "rev",
+      width = 10,
+      overflow = "cut",
+      priority = 2,
+      value_formatter = function(value)
+        return value:sub(1, 7)
+      end,
+    },
+    src = {
+      title = "src",
+      width = -1, -- fill remaining space
+      overflow = "ellipsis",
+      priority = 1,
     },
   },
 
-  columns = {
-    -- Which columns to display and in what order. Valid identifiers: "name", "rev", "src"
-    order = { "name", "rev", "src" },
+  window = {
+    min_width = 50,
+    min_height = 20,
 
-    -- How to display each column (corresponds to `order`).
-    -- Each entry can be:
-    --  - an integer: fixed width, e.g. 20
-    --  - a negative integer (e.g. -1): fill remaining space
-    --  - 0: hide the column
-    --  - an array: { width, "ellipsis" | "cut" } where the second element controls overflow display
-    -- Default:
-    display = { 20, { 7, "cut" }, -1 },
-  }
+    -- Title is an object with text and position ("left" | "center" | "right")
+    title = {
+      text = "Pack selector",
+      position = "left",
+    },
+
+    -- Footer structure:
+    --  entries: array of { "text", "HighlightGroup?" } entries
+    --  separator: string used between entries
+    --  position: "left" | "center" | "right"
+    footer = {
+      entries = {
+        { "[u] update", "DiagnosticFloatingInfo" },
+        { " " },
+        { "[c] clear",  "DiagnosticFloatingHint" },
+        { " " },
+        { "[d] delete", "DiagnosticFloatingWarn" },
+      },
+      separator = " ",
+      position = "left",
+    },
+  },
 })
 ```
 
-Quick examples
-
-- Change only the window title:
-
-```lua
-require('nvimpack-selector').setup({ ui = { title = "My Packs" } })
-```
-
-- Hide the "src" column:
-
-```lua
-require('nvimpack-selector').setup({
-  columns = { order = { "name", "rev", "src" }, display = { 30, 10, 0 } }
-})
-```
-
-  Or just remove the column from the order entries:
-
-```lua
-require('nvimpack-selector').setup({
-  columns = { order = { "name", "rev"}}
-})
-```
-
-- Let the first column expand to use remaining space:
-
-```lua
-require('nvimpack-selector').setup({
-  columns = { order = { "name", "rev" }, display = { -1, 10 } }
-})
-```
-
-- Reserve 30 characters and show ellipsis on overflow for the `name` column:
-
-```lua
-require('nvimpack-selector').setup({
-  columns = { order = { "name", "rev" }, display = { {30, "ellipsis"}, 10 } }
-})
-```
-
-Notes
-
-- Because setup merges with defaults, you only need to include the parts you want to change.
-
-- Commands:
+Commands
+------
 
 - `:NvimPackSelector open` — open the selector window
-- `:NvimPackSelector toggle` — toggle the selector window
 
 Status
 ------
