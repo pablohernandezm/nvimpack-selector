@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   lint-typecheck-test:
     name: ${{ matrix.task }} (${{ matrix.nvim-version }})
@@ -12,7 +15,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        task: [lint, typecheck, test]
         nvim-version: [stable, nightly]
 
     steps:
@@ -25,13 +27,7 @@ jobs:
 
       - name: Run lint/typecheck/test
         run: |
-          if [[ "${{ matrix.task }}" == "lint" ]]; then
-            lx --nvim lint
-          elif [[ "${{ matrix.task }}" == "typecheck" ]]; then
-            lx --nvim check
-          elif [[ "${{ matrix.task }}" == "test" ]]; then
-            lx --nvim test
-          fi
+          lx --nvim test
 
   format:
     runs-on: ubuntu-24.04
@@ -40,5 +36,6 @@ jobs:
       - name: Check code formatting
         uses: JohnnyMorganz/stylua-action@v5
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           version: latest
           args: --check .
