@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  lint-typecheck-test:
+  test:
     name: test (${{ matrix.nvim-version }})
     runs-on: ubuntu-24.04
     strategy:
