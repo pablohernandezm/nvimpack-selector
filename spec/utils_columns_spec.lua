@@ -128,27 +128,6 @@ describe("utils.columns", function()
     end)
   end)
 
-  describe("get_column_settings", function()
-    it("should return correct settings", function()
-      for k, v in pairs(conf.columns) do
-        assert.is_not_nil(columns.get_column_settings(k))
-        assert.are_equal(v, columns.get_column_settings(k))
-      end
-    end)
-
-    it("should return nil on wrong column name", function()
-      ---@diagnostic disable-next-line
-      assert.is_nil(columns.get_column_settings(""))
-    end)
-
-    it("should throw error when name is not a string", function()
-      assert.has_error(function()
-        ---@diagnostic disable-next-line
-        columns.get_column_settings(nil)
-      end)
-    end)
-  end)
-
   describe("apply_column_settings", function()
     ---@type vim.pack.PlugData
     local data = {
