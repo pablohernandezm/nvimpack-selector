@@ -26,6 +26,11 @@ end
 M.format_column = function(value, options)
   local text = value
 
+  if options.value_formatter and type(options.value_formatter) == "function" then
+    text = options.value_formatter(value)
+    assert(type(text) == "string", "`value_formatter` should return a string")
+  end
+
   if value:len() > options.width then
     local overflow_text = options.overflow
 

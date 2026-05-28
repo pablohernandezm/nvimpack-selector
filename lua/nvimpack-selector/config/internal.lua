@@ -4,6 +4,7 @@
 ---@field width integer
 ---@field overflow "ellipsis" | "cut" | string
 ---@field priority integer
+---@field value_formatter? fun(value: string):string Custom column value formatter.
 
 ---@class nvimpack-selector.Config.Columns
 ---@field name nvimpack-selector.Config.Columns.Opts
@@ -43,9 +44,12 @@ local default_config = {
     },
     rev = {
       title = "rev",
-      width = 7,
+      width = 10,
       overflow = "cut",
       priority = 2,
+      value_formatter = function(value)
+        return value:sub(1, 7)
+      end,
     },
     src = {
       title = "src",

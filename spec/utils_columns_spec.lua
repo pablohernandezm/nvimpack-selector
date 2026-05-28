@@ -100,6 +100,32 @@ describe("utils.columns", function()
       result = columns.format_column(filler:rep(name.width - free), name)
       assert.are_equal(filler:rep(name.width - free) .. (" "):rep(free), result)
     end)
+
+    it("should apply value_formatter", function()
+      local name = vim.deepcopy(conf.columns.name)
+      name.width = 20
+      local format = "* %s *"
+      local formatted = format:format(filler)
+
+      name.value_formatter = function(value)
+        return ("* %s *"):format(value)
+      end
+
+      local result = columns.format_column(filler, name)
+      assert.are_equal(formatted .. (" "):rep(name.width - formatted:len()), result)
+    end)
+
+    it("should throw error on invalid value_formatter", function()
+      local name = vim.deepcopy(conf.columns.name)
+      name.value_formatter = function(_)
+        ---@diagnostic disable-next-line
+        return nil
+      end
+
+      assert.has_error(function()
+        columns.format_column(filler, name)
+      end)
+    end)
   end)
 
   describe("get_column_settings", function()
