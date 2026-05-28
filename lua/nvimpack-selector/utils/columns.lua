@@ -23,8 +23,13 @@ end
 ---Format a column value based on the width and column options.
 ---@param value string
 ---@param options nvimpack-selector.Config.Columns.Opts
+---@return string
 M.format_column = function(value, options)
   local text = value
+
+  if options.width == 0 then
+    return ""
+  end
 
   if options.value_formatter and type(options.value_formatter) == "function" then
     text = options.value_formatter(value)

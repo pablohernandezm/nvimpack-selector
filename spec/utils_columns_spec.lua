@@ -50,6 +50,15 @@ describe("utils.columns", function()
   end)
 
   describe("format_column", function()
+    it("should return nothing when the column width is 0", function()
+      local name = vim.deepcopy(conf.columns.name)
+      name.width = 0
+
+      local result = columns.format_column(filler:rep(10), name)
+
+      assert.are_equal("", result)
+    end)
+
     it("should respect left alignment", function()
       local free_space = 3
       local rev = conf.columns.rev
