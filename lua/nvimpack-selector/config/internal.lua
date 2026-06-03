@@ -1,4 +1,5 @@
 --- == COLUMN CONFIG == ---
+
 ---@class nvimpack-selector.Config.Columns.Opts
 ---@field title string
 ---@field width integer
@@ -13,6 +14,7 @@
 ---@field src  nvimpack-selector.Config.Columns.Opts
 
 --- == WINDOW  CONFIG == ---
+
 ---@alias nvimpack-selector.Config.Window.Position ("left" | "center" | "right")
 
 ---@class nvimpack-selector.Config.Window.Title
@@ -30,10 +32,15 @@
 ---@field title nvimpack-selector.Config.Window.Title
 ---@field footer nvimpack-selector.Config.Window.Footer
 
+--- == KEYMAP CONFIG == ---
+---@alias nvimpack-selector.KeymapHandler fun()
+
 --- == DEFAULT CONFIGURATION == ---
+
 ---@class nvimpack-selector.Config
 ---@field columns nvimpack-selector.Config.Columns
 ---@field window nvimpack-selector.Config.Window
+---@field keymaps table<string, nvimpack-selector.KeymapHandler>
 local default_config = {
   ---@enum (key) nvimpack-selector.Config.Column
   columns = {
@@ -70,13 +77,19 @@ local default_config = {
     },
     footer = {
       entries = {
-        { "[u] update", "DiagnosticFloatingInfo" },
-        { "[c] clear", "DiagnosticFloatingHint" },
-        { "[d] delete", "DiagnosticFloatingWarn" },
+        { "[u] update", "FloatFooter" },
+        { "[U] update all", "FloatFooter" },
+        { "[c] clear", "FloatFooter" },
       },
       separator = " ",
       position = "left",
     },
+  },
+
+  keymaps = {
+    ["U"] = require("nvimpack-selector.pack").update,
+    ["u"] = require("nvimpack-selector.pack").updateSelected,
+    ["c"] = require("nvimpack-selector.pack").clear,
   },
 }
 
