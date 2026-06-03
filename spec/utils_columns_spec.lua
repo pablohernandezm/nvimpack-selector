@@ -149,10 +149,21 @@ describe("utils.columns", function()
     it("should return a valid array", function()
       local result = columns.apply_column_settings(data, settings.columns)
 
+      ---Build each pair
+      ---@param name nvimpack-selector.Config.Column
+      ---@param value string
+      ---@return nvimpack-selector.utils.ColumnValuePair
+      local u = function(name, value)
+        return {
+          name = name,
+          value = columns.format_column(value, conf.columns[name]),
+        }
+      end
+
       assert.are_same({
-        columns.format_column(data.rev, conf.columns.rev),
-        columns.format_column(data.spec.name, conf.columns.name),
-        columns.format_column(data.spec.src, conf.columns.src),
+        u("rev", data.rev),
+        u("name", data.spec.name),
+        u("src", data.spec.src),
       }, result)
     end)
 

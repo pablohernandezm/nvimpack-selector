@@ -29,16 +29,46 @@ M.display_list = function(buffer, max_width)
     end
   end
 
-  ---@type string[]
-  local lines = {}
   local colutils = require("nvimpack-selector.utils.columns")
 
-  for _, plugin in ipairs(plugins) do
-    local processed = colutils.apply_column_settings(plugin, columns_cpy)
-    table.insert(lines, table.concat(processed))
-  end
+  local row_start = 0
+  for i, plugin in ipairs(plugins) do
+    local pair = colutils.apply_column_settings(plugin, columns_cpy)
 
-  vim.api.nvim_buf_set_lines(buffer, 0, -1, false, lines)
+    --- set lines
+    local start = (i - 1) + row_start
+    local stop = i + row_start
+    local line = ""
+
+    for _, p in ipairs(pair) do
+      line = line .. p.value
+    end
+
+    vim.api.nvim_buf_set_lines(buffer, start, stop, false, { line })
+
+    --- set column highlights
+    vim.schedule(function()
+      local col_start = 0
+
+      for _, p in ipairs(pair) do
+        ---@type nvimpack-selector.Config.Columns.Opts
+        local col = columns[p.name]
+
+        if col.hl_group then
+          local ns_name = "nvimpack-selector.list." .. p.name
+          local ns = vim.api.nvim_get_namespaces()[ns_name]
+          ns = ns or vim.api.nvim_create_namespace(ns_name)
+
+          vim.api.nvim_buf_set_extmark(buffer, ns, start, col_start, {
+            end_col = col_start + vim.trim(p.value):len(),
+            hl_group = col.hl_group,
+          })
+        end
+
+        col_start = col_start + col.width
+      end
+    end)
+  end
 end
 
 return M

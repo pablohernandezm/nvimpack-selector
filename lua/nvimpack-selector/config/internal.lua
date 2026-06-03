@@ -5,6 +5,7 @@
 ---@field overflow "ellipsis" | "cut" | string
 ---@field priority integer
 ---@field value_formatter? fun(value: string):string Custom column value formatter.
+---@field hl_group? string
 
 ---@class nvimpack-selector.Config.Columns
 ---@field name nvimpack-selector.Config.Columns.Opts
@@ -56,6 +57,7 @@ local default_config = {
       width = -1,
       overflow = "ellipsis",
       priority = 1,
+      hl_group = "Directory",
     },
   },
 

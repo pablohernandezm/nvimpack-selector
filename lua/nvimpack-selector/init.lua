@@ -38,6 +38,10 @@ M.open_float = function()
 
   require("nvimpack-selector.list").display_list(buf, w)
 
+  --- window style
+  vim.wo[win].cursorline = true
+
+  --- return
   return buf, win
 end
 

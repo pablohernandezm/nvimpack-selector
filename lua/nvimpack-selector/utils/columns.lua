@@ -51,15 +51,22 @@ M.format_column = function(value, options)
   return string.format("%" .. -options.width .. "s", text)
 end
 
+---@class nvimpack-selector.utils.ColumnValuePair
+---@field name string the name of the column
+---@field value string the value of the column
+
 ---Process and order plugin data based on column settings.
 ---@param data vim.pack.PlugData Plugin data.
 ---@param opts nvimpack-selector.Config.Columns Column config.
----@return string[]
+---@return nvimpack-selector.utils.ColumnValuePair[] pairs
 M.apply_column_settings = function(data, opts)
   local sorted = M.sort_columns(opts)
 
   local packutils = require("nvimpack-selector.utils.pack")
+
+  ---@type nvimpack-selector.utils.ColumnValuePair[]
   local result = {}
+
   for i = 1, #sorted do
     local col_name = sorted[i][1]
     local col_config = sorted[i][2]
@@ -67,7 +74,10 @@ M.apply_column_settings = function(data, opts)
 
     assert(col_value, string.format("Unexpected column %s", col_name))
 
-    result[i] = M.format_column(col_value, col_config)
+    result[i] = {
+      name = col_name,
+      value = M.format_column(col_value, col_config),
+    }
   end
 
   return result
