@@ -36,6 +36,8 @@ require('nvimpack-selector').setup({
     --  - overflow: "ellipsis" | "cut" -- controls overflow display. You can set a custom string too.
     --  - priority: integer -- higher priority columns are placed earlier
     --  - value_formatter: fun(value: string): string -- custom column formatter
+    --  - hl_group: string -- the HighlightGroup of the column. Check `:h highlight-groups`.
+
     name = {
       title = "name",
       width = 20,
@@ -56,6 +58,7 @@ require('nvimpack-selector').setup({
       width = -1, -- fill remaining space
       overflow = "ellipsis",
       priority = 1,
+      hl_group = "Directory",
     },
   },
 
@@ -76,9 +79,7 @@ require('nvimpack-selector').setup({
     footer = {
       entries = {
         { "[u] update", "DiagnosticFloatingInfo" },
-        { " " },
-        { "[c] clear",  "DiagnosticFloatingHint" },
-        { " " },
+        { "[c] clear", "DiagnosticFloatingHint" },
         { "[d] delete", "DiagnosticFloatingWarn" },
       },
       separator = " ",
