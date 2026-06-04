@@ -51,6 +51,9 @@ before_each(function()
   stubs.nvim_buf_is_valid = stub(vim.api, "nvim_buf_is_valid", function()
     return true
   end)
+  stubs.nvim_buf_get_lines = stub(vim.api, "nvim_buf_get_lines", function()
+    return { "user/repo    abc1234    github:user/repo" }
+  end)
   stubs.nvim_buf_set_lines = stub(vim.api, "nvim_buf_set_lines", function() end)
   stubs.nvim_buf_set_extmark = stub(vim.api, "nvim_buf_set_extmark", function() end)
   stubs.nvim_buf_del_extmark = stub(vim.api, "nvim_buf_del_extmark", function() end)
@@ -102,7 +105,7 @@ describe("display_list", function()
     })
 
     list.display_list(buffer, max_width)
-    assert.stub(stubs.nvim_buf_set_extmark).called(3) --- 3 highlight groups
+    assert.stub(stubs.nvim_buf_set_extmark).called(3)  --- 3 highlight groups
     assert.stub(stubs.nvim_create_namespace).called(3) --- 3 columns, a namespace per column
   end)
 end)
@@ -175,12 +178,12 @@ describe("selection list", function()
     assert.are.same("user/repo", result[2].name)
   end)
 
-  it("remove clears buffer line and nils slot", function()
+  it("remove highlights removed plugin line", function()
     setup_packs_stub({ sample_plugin })
     list.display_list(buffer, max_width)
 
     list.remove(1)
-    assert.stub(stubs.nvim_buf_set_lines).called_with(buffer, 0, 1, false, {})
+    assert.stub(stubs.nvim_buf_set_extmark).called(1)
     assert.is_nil(list.get(1))
   end)
 
@@ -200,6 +203,17 @@ describe("selection list", function()
     list.update(1)
 
     assert.is_nil(list.get(1))
+  end)
+
+  it("remove keeps line content and nils slot for multiple items", function()
+    setup_packs_stub({ sample_plugin, sample_plugin2 })
+    list.display_list(buffer, max_width)
+
+    list.remove(1)
+    list.remove(2)
+
+    assert.is_nil(list.get(1))
+    assert.is_nil(list.get(2))
   end)
 
   it("remove is a no-op for already removed slot", function()

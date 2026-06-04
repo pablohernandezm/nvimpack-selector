@@ -121,7 +121,18 @@ M.display_list = function(buffer, max_width)
       remove = function()
         if vim.api.nvim_buf_is_valid(buffer) then
           removeExtMarks()
-          vim.api.nvim_buf_set_lines(buffer, start, stop, false, {})
+
+          local ns_name = "nvimpack-selector.list.removed"
+          local ns = vim.api.nvim_get_namespaces()[ns_name]
+          ns = ns or vim.api.nvim_create_namespace(ns_name)
+
+          local line = vim.api.nvim_buf_get_lines(buffer, start, start + 1, false)[1]
+          vim.api.nvim_buf_set_extmark(buffer, ns, start, 0, {
+            end_col = line and #line or 0,
+            hl_group = "Ignore",
+            hl_eol = true,
+          })
+
           selection_list[idx] = nil
         end
       end,
