@@ -183,7 +183,7 @@ describe("selection list", function()
     list.display_list(buffer, max_width)
 
     list.remove(1)
-    assert.stub(stubs.nvim_buf_set_extmark).called(1)
+    assert.stub(stubs.nvim_create_namespace).was_called_with("nvimpack-selector.list.removed")
     assert.is_nil(list.get(1))
   end)
 
