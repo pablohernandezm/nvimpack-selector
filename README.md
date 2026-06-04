@@ -14,12 +14,26 @@ Usage
 -----
 
 - Install with your preferred plugin manager.
-- In your config (optional) call:
+- Bind a key to `:NvimPackSelector open` to open the floating window.
+- (Optional) Call `require('nvimpack-selector').setup(opts)` to configure.
+
+Keybindings
+-----------
+
+Default keymaps in the floating window:
+
+| Key | Action |
+|-----|--------|
+| `u` | Update the plugin under the cursor |
+| `U` | Update all plugins |
+| `c` | Remove all inactive plugins |
+
+These can be overridden via the `keymaps` config option.
 
 Configuration
 -------------
 
-Call require('nvimpack-selector').setup(opts) to customise behaviour. 
+Call `require('nvimpack-selector').setup(opts)` to customise behaviour.
 
 Available options and defaults:
 
@@ -78,13 +92,25 @@ require('nvimpack-selector').setup({
     --  position: "left" | "center" | "right"
     footer = {
       entries = {
-        { "[u] update", "DiagnosticFloatingInfo" },
-        { "[c] clear", "DiagnosticFloatingHint" },
-        { "[d] delete", "DiagnosticFloatingWarn" },
+        { "[u] update",     "FloatFooter" },
+        { "[U] update all", "FloatFooter" },
+        { "[c] clear",      "FloatFooter" },
       },
       separator = " ",
       position = "left",
     },
+  },
+
+  -- Keymaps for the floating window buffer.
+  -- Each key is a normal-mode mapping that calls the given handler.
+  -- Default handlers are in nvimpack-selector.pack:
+  --   update  → vim.pack.update (update all plugins)
+  --   updateSelected → update only the plugin under the cursor
+  --   clear   → remove all inactive plugins
+  keymaps = {
+    ["U"] = require("nvimpack-selector.pack").update,
+    ["u"] = require("nvimpack-selector.pack").updateSelected,
+    ["c"] = require("nvimpack-selector.pack").clear,
   },
 })
 ```

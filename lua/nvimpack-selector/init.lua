@@ -1,5 +1,10 @@
 local M = {}
 
+---@type integer | nil
+local buf = nil
+---@type integer | nil
+local win = nil
+
 ---@param opts? nvimpack-selector.Opts
 M.setup = function(opts)
   vim.g.nvimpack_selector = opts
@@ -7,6 +12,31 @@ end
 
 M.getConf = function()
   return require("nvimpack-selector.config.internal")
+end
+
+---Get the selected item and it's index in the list (item, row).
+---@return nvimpack-selector.List.Item | nil
+---@return integer | nil
+M.getSelected = function()
+  if win then
+    vim.validate("window", win, vim.api.nvim_win_is_valid, "valid window")
+
+    local row = vim.api.nvim_win_get_cursor(win)[1]
+    return require("nvimpack-selector.list").get(row), row
+  end
+
+  return nil
+end
+
+---@param bufnr integer
+local loadKeymaps = function(bufnr)
+  local config = M.getConf().keymaps
+
+  for key, action in pairs(config) do
+    vim.keymap.set("n", key, function()
+      action()
+    end, { buf = bufnr })
+  end
 end
 
 --- Open list in a floating window.
@@ -18,8 +48,8 @@ M.open_float = function()
   local w = config.window.min_width
   local h = config.window.min_height
 
-  local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
+  buf = vim.api.nvim_create_buf(false, true)
+  win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     col = math.floor((vim.o.columns - w) / 2),
     row = math.floor((vim.o.lines - h) / 2),
@@ -40,6 +70,9 @@ M.open_float = function()
 
   --- window style
   vim.wo[win].cursorline = true
+
+  --- keymaps
+  loadKeymaps(buf)
 
   --- return
   return buf, win
